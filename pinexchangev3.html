@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+function process()
+{
+	var myPins = document.getElementById('myPins').value.trim();
+	var myDupes = document.getElementById('myDupes').value.trim();
+	var yourPins = document.getElementById('yourPins').value.trim();
+	var yourDupes = document.getElementById('yourDupes').value.trim();
+
+	var myPinsArr = myPins.split('\n').map(x => {return x.replace(/:([a-z]+\d+):.*/i, '$1')});
+	var myDupesArr = myDupes.split('\n').map(x => {return x.replace(/:([a-z]+\d+):.*/i, '$1')});
+	var yourPinsArr = yourPins.split('\n').map(x => {return x.replace(/:([a-z]+\d+):.*/i, '$1')});
+	var yourDupesArr = yourDupes.split('\n').map(x => {return x.replace(/:([a-z]+\d+):.*/i, '$1')});
+	
+	var myPinSet = new Set(myPinsArr);
+	var myDupeSet = new Set(myDupesArr);
+	var yourPinSet = new Set(yourPinsArr);
+	var yourDupeSet = new Set(yourDupesArr);
+	
+	for (let pin of yourDupeSet)
+	{
+		if (myPinSet.has(pin))
+		{
+			yourDupeSet.delete(pin);
+		}
+	}
+	
+	for (let pin of myDupeSet)
+	{
+		if (yourPinSet.has(pin))
+		{
+			myDupeSet.delete(pin);
+		}
+	}
+
+	var myTradePins = Array.from(myDupeSet);
+	var myTradePinTotal = myTradePins.length;
+	var yourTradePins = Array.from(yourDupeSet);
+	var yourTradePinTotal = yourTradePins.length;
+
+	if (myTradePinTotal > yourTradePinTotal)
+	{
+		myTradePins.splice(yourTradePinTotal);
+	}
+	else if (myTradePinTotal < yourTradePinTotal)
+	{
+		yourTradePins.splice(myTradePinTotal);
+	}
+	
+	var myTradePinOutput = myTradePins.join('$');
+	var yourTradePinOutput = yourTradePins.join('$');
+
+	document.getElementById('myCommand').value = myTradePinOutput;
+	document.getElementById('theirCommand').value = yourTradePinOutput;
+}
+</script>
+</head>
+<body>
+<textarea id="myPins" placeholder="Your Pins ($mpes)" style="width:20%"></textarea>
+<textarea id="myDupes" placeholder="Your Dupes ($mpeds)" style="width:20%"></textarea>
+<textarea id="yourPins" placeholder="Their Pins ($mpes <id>)" style="width:20%"></textarea>
+<textarea id="yourDupes" placeholder="Their Dupes ($mpeds <id>)" style="width:20%"></textarea>
+<br />
+<br />
+<button onclick="process()">Process</button>
+<br/>
+<br/>
+<textarea id="myCommand" style="width:40%;height:250px" placeholder="Your Command"></textarea>
+<textarea id="theirCommand" style="width:40%;height:250px" placeholder="Their Command"></textarea>
+</body>
+</html>
