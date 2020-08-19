@@ -20,6 +20,8 @@ function process()
 	var yourPinSet = new Set(yourPinsArr);
 	var yourDupeSet = new Set(yourDupesArr);
 	
+	var unbalanced = document.getElementById('unbalanced').checked;
+	
 	for (let pin of yourDupeSet)
 	{
 		if (myPinSet.has(pin))
@@ -41,13 +43,16 @@ function process()
 	var yourTradePins = Array.from(yourDupeSet);
 	var yourTradePinTotal = yourTradePins.length;
 
-	if (myTradePinTotal > yourTradePinTotal)
+	if (!unbalanced)
 	{
-		myTradePins.splice(yourTradePinTotal);
-	}
-	else if (myTradePinTotal < yourTradePinTotal)
-	{
-		yourTradePins.splice(myTradePinTotal);
+		if (myTradePinTotal > yourTradePinTotal)
+		{
+			myTradePins.splice(yourTradePinTotal);
+		}
+		else if (myTradePinTotal < yourTradePinTotal)
+		{
+			yourTradePins.splice(myTradePinTotal);
+		}
 	}
 	
 	var myTradePinOutput = myTradePins.join('$');
@@ -66,6 +71,7 @@ function process()
 <br />
 <br />
 <button onclick="process()">Process</button>
+<label><input type="checkbox" id="unbalanced" />Unbalanced?</label>
 <br/>
 <br/>
 <textarea id="myCommand" style="width:40%;height:250px" placeholder="Your Command"></textarea>
